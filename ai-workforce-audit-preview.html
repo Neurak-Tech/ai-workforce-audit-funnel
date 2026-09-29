@@ -18,8 +18,18 @@
 
     <!-- Meta Pixel -->
     <script>
-      // TODO: paste your Meta Pixel ID below (Events Manager → Data Sources → your Pixel → Settings)
-      window.AIHIVE_META_PIXEL_ID = "";
+      // Meta Pixel ID (Events Manager → Data Sources → your Pixel → Settings)
+      window.AIHIVE_META_PIXEL_ID = "4491975310948346";
+      // TESTING ONLY: sent with server-side (CAPI) events so they show up in
+      // Events Manager → Test Events. Set back to "" once testing is done.
+      window.AIHIVE_META_TEST_EVENT_CODE = "TEST59558";
+      // Unique ID shared by a browser event and its server (CAPI) copy so Meta can deduplicate them.
+      window.aihiveEventId = function (prefix) {
+        var id = window.crypto && crypto.randomUUID
+          ? crypto.randomUUID()
+          : Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+        return prefix + "." + id;
+      };
       if (window.AIHIVE_META_PIXEL_ID) {
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -27,7 +37,8 @@
         t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
         document,'script','https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', window.AIHIVE_META_PIXEL_ID);
-        fbq('track', 'PageView');
+        window.AIHIVE_PAGEVIEW_EVENT_ID = window.aihiveEventId("pageview");
+        fbq('track', 'PageView', {}, { eventID: window.AIHIVE_PAGEVIEW_EVENT_ID });
       }
     </script>
     <!-- End Meta Pixel -->
@@ -100,29 +111,103 @@ Error generating stack: `+i.message+`
         return (el.value || "").trim();
       }
 
+      // Field values captured at submit time. React unmounts each step as soon as it is
+      // accepted, so reading the DOM after the submit would find the fields already gone.
+      var FIELD_IDS = [
+        "firstName", "email", "phone", "whatsappConsent", "followupConsent", "industry",
+        "otherTool", "context", "timeline",
+        "b-firstName", "b-lastName", "b-email", "b-phone", "b-company", "b-website"
+      ];
+      var captured = {};
+
+      function captureFields() {
+        FIELD_IDS.forEach(function (id) {
+          if (document.getElementById(id)) captured[id] = val(id);
+        });
+        // The country-code <select> has no id, only an aria-label.
+        var cc = document.querySelector('select[aria-label="Phone country code"]');
+        if (cc) captured.country = cc.value;
+      }
+
+      function field(id) {
+        return captured[id] === undefined ? "" : captured[id];
+      }
+
+      // Mirrors the app's own Step 1 validation, so Lead only fires when the step is accepted.
+      function step1Valid() {
+        var phone = field("phone").replace(/\D/g, "");
+        var cc = field("country");
+        if (!field("firstName")) return false;
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(field("email"))) return false;
+        if (phone.length < 6 || (cc.replace(/\D/g, "") + phone).length > 15) return false;
+        if (cc === "+91" && !/^[6-9]\d{9}$/.test(phone)) return false;
+        return true;
+      }
+
+      function sha256(text) {
+        return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buf) {
+          return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+            return ("0" + b.toString(16)).slice(-2);
+          }).join("");
+        });
+      }
+
+      // Hashed user data in the Google tag format (sha256_* keys), normalised first:
+      // email and name lower-cased and trimmed, phone in E.164 (+<country code><number>).
+      function hashedUserData(firstName, email, cc, phone) {
+        if (!(window.crypto && crypto.subtle && window.TextEncoder)) return Promise.resolve(null);
+        var e164 = "+" + cc.replace(/\D/g, "") + phone.replace(/\D/g, "").replace(/^0+/, "");
+        return Promise.all([
+          sha256(email.trim().toLowerCase()),
+          sha256(e164),
+          sha256(firstName.trim().toLowerCase())
+        ]).then(function (h) {
+          return {
+            sha256_email_address: h[0],
+            sha256_phone_number: h[1],
+            address: { sha256_first_name: h[2] }
+          };
+        }).catch(function () {
+          return null;
+        });
+      }
+
+      // Picked up in GTM by the Meta CAPI tag (custom event "aihive_meta"), which sends
+      // the server copy of a browser event with the same event_id.
+      function pushMetaServerEvent(eventName, eventId, userData) {
+        var payload = { event: "aihive_meta", meta_event_name: eventName, meta_event_id: eventId };
+        if (userData) payload.user_data = userData;
+        if (window.AIHIVE_META_TEST_EVENT_CODE) payload.test_event_code = window.AIHIVE_META_TEST_EVENT_CODE;
+        window.dataLayer.push(payload);
+      }
+
+      if (window.AIHIVE_PAGEVIEW_EVENT_ID) {
+        pushMetaServerEvent("PageView", window.AIHIVE_PAGEVIEW_EVENT_ID);
+      }
+
       function readStep1() {
         return {
-          firstName: val("firstName"),
-          email: val("email"),
-          country: val("country"),
-          phone: val("phone"),
-          whatsappConsent: val("whatsappConsent"),
-          followupConsent: val("followupConsent"),
-          industry: val("industry"),
-          otherTool: val("otherTool"),
-          context: val("context"),
-          timeline: val("timeline")
+          firstName: field("firstName"),
+          email: field("email"),
+          country: field("country"),
+          phone: field("phone"),
+          whatsappConsent: field("whatsappConsent"),
+          followupConsent: field("followupConsent"),
+          industry: field("industry"),
+          otherTool: field("otherTool"),
+          context: field("context"),
+          timeline: field("timeline")
         };
       }
 
       function readStep2() {
         return {
-          firstName: val("b-firstName"),
-          lastName: val("b-lastName"),
-          email: val("b-email"),
-          phone: val("b-phone"),
-          company: val("b-company"),
-          website: val("b-website")
+          firstName: field("b-firstName"),
+          lastName: field("b-lastName"),
+          email: field("b-email"),
+          phone: field("b-phone"),
+          company: field("b-company"),
+          website: field("b-website")
         };
       }
 
@@ -180,24 +265,34 @@ Error generating stack: `+i.message+`
         function (e) {
           var form = e.target;
           if (!(form instanceof HTMLFormElement)) return;
+          captureFields();
 
           if (form.querySelector("#email") && form.querySelector("#firstName") && !firedStep1) {
-            // Give React's own onSubmit validation a tick to run/reject first.
             setTimeout(function () {
-              var email = val("email");
-              if (!email) return; // validation blocked the submit; do not fire
+              if (!step1Valid()) return; // validation blocked the submit; do not fire
               firedStep1 = true;
-              var lead = mergedLead({ conversion_event: "audit_request_started" });
+              var eventId = window.aihiveEventId("lead");
+              var lead = mergedLead({
+                conversion_event: "audit_request_started",
+                meta_event_id: eventId,
+                test_event_code: window.AIHIVE_META_TEST_EVENT_CODE || undefined
+              });
               pushDataLayer("aihive_lead_step1", { lead: lead });
-              trackMetaPixel("Lead", { content_name: "audit_request_started" });
+              // Standard Lead event, deduplicated against the CAPI copy by eventID.
+              if (typeof window.fbq === "function") {
+                window.fbq("track", "Lead", {}, { eventID: eventId });
+              }
+              hashedUserData(field("firstName"), field("email"), field("country"), field("phone")).then(function (userData) {
+                pushMetaServerEvent("Lead", eventId, userData);
+              });
               sendWebhook(lead);
             }, 0);
           }
 
           if (form.querySelector("#b-email") && form.querySelector("#b-company")) {
             setTimeout(function () {
-              var email = val("b-email");
-              var company = val("b-company");
+              var email = field("b-email");
+              var company = field("b-company");
               if (!email || !company) return; // validation blocked the submit
               var lead = mergedLead({ conversion_event: "booking_details_submitted" });
               pushDataLayer("aihive_lead_details", { lead: lead });
