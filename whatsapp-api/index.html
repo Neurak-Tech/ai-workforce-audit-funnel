@@ -1,4 +1,8 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -6,11 +10,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5PWDMS78');</script>
 <!-- End Google Tag Manager -->
-</head><body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5PWDMS78"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 <title>AI Hive WhatsApp API</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -348,8 +347,24 @@ body{overflow-x:hidden}
   .uses{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:78%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;margin-inline:-20px;padding-inline:20px}
   .uses .u{scroll-snap-align:start}
 }
-</style>
 
+/* hero video */
+.vwrap{position:relative;max-width:640px;margin:28px auto 0;aspect-ratio:16/9;border-radius:22px;overflow:hidden;background:#000;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 30px 70px -30px rgba(0,0,0,.9),0 0 60px -10px rgba(31,184,102,.35)}
+.vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.vshield{position:absolute;inset:0;border:0;background:transparent;cursor:pointer;display:block;width:100%;padding:0}
+.vshield .vplay{position:absolute;left:50%;top:50%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;background:rgba(31,184,102,.95);display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:opacity .2s,transform .2s}
+.vshield .vplay svg{width:30px;height:30px;margin-left:4px;fill:#04150D}
+.vwrap.playing .vplay{opacity:0;transform:scale(.8)}
+.vsound{position:absolute;left:14px;bottom:14px;display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,.72);color:#fff;font:700 14px/1 var(--f-body,Inter,sans-serif);padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);cursor:pointer;z-index:2}
+.vwrap.unmuted .vsound{opacity:.75}
+@media (max-width:640px){.vwrap{margin-top:22px;border-radius:16px}.vshield .vplay{width:64px;height:64px;margin:-32px 0 0 -32px}}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5PWDMS78"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <div class="progress" id="prog" aria-hidden="true"></div>
 <div class="strip">🔥 Launch price: API key at <b>₹200</b> <span class="strike">₹400</span> per number · Official WhatsApp API · Zero commission</div>
 
@@ -359,9 +374,14 @@ body{overflow-x:hidden}
       <span class="eyebrow">For developers &amp; SaaS founders in India</span>
       <h1>The official WhatsApp API for your product.<br><span class="grad">₹200 a number. Zero commission.</span></h1>
       <p class="lead">Get an API key, plug it into your app, and send. No bloated platform, no card on Meta.</p>
+      <div class="vwrap" id="vwrap">
+        <iframe id="yt" title="AI Hive WhatsApp API in 60 seconds" src="https://www.youtube-nocookie.com/embed/rmF2wGhdGFM?enablejsapi=1&amp;controls=0&amp;rel=0&amp;modestbranding=1&amp;playsinline=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=rmF2wGhdGFM" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe>
+        <button type="button" class="vshield" id="vshield" aria-label="Play or pause video"><span class="vplay"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></span></button>
+        <button type="button" class="vsound" id="vsound">🔇 Tap for sound</button>
+      </div>
       <div class="price-pop"><span class="old strike">₹400</span><span class="new">₹200</span><span class="per">/ number / month</span><span class="tag">50% OFF</span></div>
       <div class="hero-cta">
-        <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Get Your API Key at ₹200 <span class="arr">→</span></a>
+        <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Get Your API Key at ₹200 <span class="arr">→</span></a>
         <a class="btn-alt" href="https://registry.scalar.com/@aihive-official/apis/hive-whatsapp-public-api@latest" target="_blank" rel="noopener">Read the API docs ↗</a>
       </div>
       <div class="badges">
@@ -428,7 +448,7 @@ body{overflow-x:hidden}
         <div class="was">Was <span class="strike">₹400</span></div>
         <div class="now">₹200<small>/mo</small></div>
         <div class="save50">You save 50%</div>
-        <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Claim ₹200 price <span class="arr">→</span></a>
+        <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Claim ₹200 price <span class="arr">→</span></a>
         <div class="sm">Per number · + GST · Monthly, no lock-in</div>
       </div>
     </div>
@@ -445,7 +465,7 @@ body{overflow-x:hidden}
       <div class="g"><div class="ic" style="background:#E3EEFF"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3B6FE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0114-5.3M20 12a8 8 0 01-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></div><h3>Webhooks</h3><p>Delivered, read and replies pushed to your server, with logs.</p></div>
     </div>
     <div class="nope"><span class="t">What we don't charge you for:</span><span class="x">shared inbox</span><span class="x">chatbot builder</span><span class="x">campaign tools</span><span class="x">per-seat pricing</span><span class="x">commission on messages</span></div>
-    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Get all four for ₹200 <span class="arr">→</span></a></div>
+    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Get all four for ₹200 <span class="arr">→</span></a></div>
   </div>
 </section>
 
@@ -464,7 +484,7 @@ body{overflow-x:hidden}
           <ul><li>A number per customer at ₹200 each</li><li>Costs you can predict and resell</li><li>Zero commission eating your margin</li><li>No card fights on Meta</li></ul></div>
       </div>
     </div>
-    <div class="sec-cta"><a class="btn-dark" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Start building today →</a></div>
+    <div class="sec-cta"><a class="btn-dark" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Start building today →</a></div>
   </div>
 </section>
 
@@ -478,7 +498,7 @@ body{overflow-x:hidden}
       <div class="u"><span class="who">Scheduling</span><div class="chat"><div class="bub">Your appointment is tomorrow at 11 AM.<div class="bt"><span>Confirm</span><span>Reschedule</span></div></div></div><h3>Booking reminders</h3></div>
       <div class="u"><span class="who">Alerts</span><div class="chat"><div class="bub">Your report for September is ready. Tap to view 📊</div></div><h3>Status updates</h3></div>
     </div>
-    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Build your first flow <span class="arr">→</span></a></div>
+    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Build your first flow <span class="arr">→</span></a></div>
   </div>
 </section>
 
@@ -554,7 +574,7 @@ body{overflow-x:hidden}
       </div>
     </div>
     <p class="sample">Recreated from the real console. Sample data for illustration.</p>
-    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Open my console <span class="arr">→</span></a></div>
+    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Open my console <span class="arr">→</span></a></div>
   </div>
 </section>
 
@@ -588,7 +608,7 @@ body{overflow-x:hidden}
         <p class="fine">Extra paid per year at 1,00,000 messages a month. Example commission rates.</p>
       </div>
     </div>
-    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Switch to zero commission <span class="arr">→</span></a></div>
+    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Switch to zero commission <span class="arr">→</span></a></div>
   </div>
 </section>
 
@@ -609,7 +629,7 @@ body{overflow-x:hidden}
         <div class="ours"><span>With AI Hive</span><b>₹0</b></div>
       </div>
     </div>
-    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Stop paying commission <span class="arr">→</span></a></div>
+    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Stop paying commission <span class="arr">→</span></a></div>
   </div>
 </section>
 
@@ -625,7 +645,7 @@ body{overflow-x:hidden}
         <div><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#1FB866"/><path d="M5.5 10.2l3 3 6-6.4" stroke="#05150F" stroke-width="2" fill="none"/></svg>Create and manage templates through the API</div>
       </div>
       <div class="hero-cta" style="justify-content:flex-start">
-        <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Get my API key <span class="arr">→</span></a>
+        <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Get my API key <span class="arr">→</span></a>
         <a class="btn-alt" href="https://registry.scalar.com/@aihive-official/apis/hive-whatsapp-public-api@latest" target="_blank" rel="noopener">Read the API docs ↗</a>
       </div>
     </div>
@@ -651,7 +671,7 @@ curl -X POST https://backend.theaihive.io/wa/v1/messages \
       <div class="st"><div class="circ">2</div><h3>Add a channel</h3><p>Your WhatsApp number at ₹200.</p><span class="time">2 minutes</span></div>
       <div class="st"><div class="circ">3</div><h3>Create a key and send</h3><p>Recharge the wallet and call the API.</p><span class="time">Same day</span></div>
     </div>
-    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Start step 1 now <span class="arr">→</span></a></div>
+    <div class="sec-cta"><a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Start step 1 now <span class="arr">→</span></a></div>
     <div class="trust">
       <div class="tb"><svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5z" fill="#1FB866"/><path d="M8 12l3 3 5-6" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Official WhatsApp API</b><span>Meta Tech Provider</span></div>
       <div class="tb"><div class="upt" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><b>99.5% uptime</b><span>Guaranteed</span></div>
@@ -685,7 +705,7 @@ curl -X POST https://backend.theaihive.io/wa/v1/messages \
         <span><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="#1FB866"/><path d="M4.5 8.2l2.2 2.2 4.6-4.8" stroke="#05150F" stroke-width="1.8" fill="none"/></svg>99.5% uptime guarantee</span>
       </div>
       <div class="totline"><span id="pt-l">Billed yearly · ₹2,040 + ₹367 GST</span><b id="pt">₹2,407</b></div>
-      <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Lock in the ₹200 price <span class="arr">→</span></a>
+      <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Lock in the ₹200 price <span class="arr">→</span></a>
       <div class="reassure"><span>✓ Set up in minutes</span><span>✓ No sales call</span><span>✓ Monthly has no lock-in</span></div>
     </div>
     <h3 style="margin-top:56px;font-size:26px;font-weight:800">Per message (India) · Meta's price, ₹0 commission</h3>
@@ -716,7 +736,7 @@ curl -X POST https://backend.theaihive.io/wa/v1/messages \
       <details><summary>Do I need a card on Meta?</summary><p>Never. You recharge your AI Hive wallet in rupees.</p></details>
       <details><summary>Where are the docs?</summary><p>The full API reference is public. <a href="https://registry.scalar.com/@aihive-official/apis/hive-whatsapp-public-api@latest" target="_blank" rel="noopener" style="color:var(--wa-deep);font-weight:700">Open the API docs ↗</a></p></details>
     </div>
-    <div class="sec-cta"><a class="btn-dark" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">All clear? Get started at ₹200 →</a></div>
+    <div class="sec-cta"><a class="btn-dark" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">All clear? Get started at ₹200 →</a></div>
   </div>
 </section>
 
@@ -726,7 +746,7 @@ curl -X POST https://backend.theaihive.io/wa/v1/messages \
     <h2 style="margin-top:22px">The official WhatsApp API in your product, this week.</h2>
     <p class="lead" style="margin:16px auto 0">Zero commission on every message. No card on Meta. No sales call.</p>
     <div class="hero-cta">
-      <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Get Your API Key at ₹200 <span class="arr">→</span></a>
+      <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Get Your API Key at ₹200 <span class="arr">→</span></a>
       <a class="btn-alt" href="https://registry.scalar.com/@aihive-official/apis/hive-whatsapp-public-api@latest" target="_blank" rel="noopener">Read the API docs ↗</a>
     </div>
     <div class="badges"><span class="bdg off">✓ Official WhatsApp API</span><span class="bdg zero">₹0 commission</span><span class="bdg tp">No card on Meta</span><span class="bdg tp">99.5% uptime</span></div>
@@ -737,7 +757,7 @@ curl -X POST https://backend.theaihive.io/wa/v1/messages \
 
 <div class="sticky" role="region" aria-label="Buy">
   <div class="s-txt"><b><span class="strike" style="color:#A9C3B8;font-size:15px">₹400</span> ₹200/number</b><span>Official WhatsApp API</span><span>₹0 commission</span></div>
-  <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Get API Key →</a>
+  <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Get API Key →</a>
 </div>
 
 <div class="modal-bg" id="exit" hidden>
@@ -745,7 +765,7 @@ curl -X POST https://backend.theaihive.io/wa/v1/messages \
     <button class="x" type="button" aria-label="Close" data-close>×</button>
     <h3 id="exit-h">Don't miss the ₹200 price</h3>
     <p>The official WhatsApp API at <b>₹200</b> <span class="strike">₹400</span> per number, with zero commission on every message.</p>
-    <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=51f1217d-00bc-485c-b9d7-96f0de30c285&coupon=FIRST50" target="_blank" rel="noopener">Claim ₹200 price →</a>
+    <a class="btn" href="https://whatsapp.theaihive.io/checkout?plan=1b8b4c2b-30bf-4f9f-a9b8-0816f467cbf6&amp;coupon=FIRST50" target="_blank" rel="noopener">Claim ₹200 price →</a>
     <button class="stay" type="button" data-close>Not now</button>
   </div>
 </div>
@@ -791,4 +811,19 @@ curl -X POST https://backend.theaihive.io/wa/v1/messages \
 })();
 </script>
 
-</body></html>
+<script>
+(function(){
+  var f=document.getElementById('yt'),w=document.getElementById('vwrap');if(!f||!w)return;
+  var muted=true,playing=true;
+  function cmd(fn,args){try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:fn,args:args||[]}),'*')}catch(e){}}
+  function ui(){w.classList.toggle('playing',playing);w.classList.toggle('unmuted',!muted);document.getElementById('vsound').textContent=muted?'🔇 Tap for sound':'🔊 Sound on'}
+  function sound(){if(muted){muted=false;cmd('unMute');cmd('setVolume',[100]);cmd('seekTo',[0,true]);cmd('playVideo');playing=true}else{muted=true;cmd('mute')}ui()}
+  document.getElementById('vshield').addEventListener('click',function(){if(muted){sound();return}playing=!playing;cmd(playing?'playVideo':'pauseVideo');ui()});
+  document.getElementById('vsound').addEventListener('click',function(e){e.stopPropagation();sound()});
+  window.addEventListener('message',function(e){if(typeof e.data!=='string'||e.data.indexOf('onStateChange')<0&&e.data.indexOf('infoDelivery')<0)return;try{var d=JSON.parse(e.data),st=d.info&&d.info.playerState!==undefined?d.info.playerState:(d.event==='onStateChange'?d.info:null);if(st===1){playing=true;ui()}else if(st===2||st===0){playing=false;ui()}}catch(x){}});
+  f.addEventListener('load',function(){try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:'yt'}),'*')}catch(e){}});
+  ui();
+})();
+</script>
+</body>
+</html>
