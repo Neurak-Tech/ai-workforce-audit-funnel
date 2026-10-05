@@ -350,13 +350,17 @@ body{overflow-x:hidden}
 
 /* hero video */
 .vwrap{position:relative;max-width:640px;margin:28px auto 0;aspect-ratio:16/9;border-radius:22px;overflow:hidden;background:#000;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 30px 70px -30px rgba(0,0,0,.9),0 0 60px -10px rgba(31,184,102,.35)}
-.vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.vwrap iframe{position:absolute;left:0;top:-64px;width:100%;height:calc(100% + 112px);border:0;pointer-events:none}
 .vshield{position:absolute;inset:0;border:0;background:transparent;cursor:pointer;display:block;width:100%;padding:0}
 .vshield .vplay{position:absolute;left:50%;top:50%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;background:rgba(31,184,102,.95);display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:opacity .2s,transform .2s}
 .vshield .vplay svg{width:30px;height:30px;margin-left:4px;fill:#04150D}
 .vwrap.playing .vplay{opacity:0;transform:scale(.8)}
-.vsound{position:absolute;left:14px;bottom:14px;display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,.72);color:#fff;font:700 14px/1 var(--f-body,Inter,sans-serif);padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);cursor:pointer;z-index:2}
+.vsound,.vfs{position:absolute;bottom:14px;display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,.72);color:#fff;font:700 14px/1 var(--f-body,Inter,sans-serif);padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);cursor:pointer;z-index:2}
+.vsound{left:14px}
+.vfs{right:14px}
+.vfs svg{width:16px;height:16px;display:block}
 .vwrap.unmuted .vsound{opacity:.75}
+.vwrap:fullscreen,.vwrap:-webkit-full-screen{max-width:none;width:100%;height:100%;margin:0;border-radius:0;aspect-ratio:auto}
 @media (max-width:640px){.vwrap{margin-top:22px;border-radius:16px}.vshield .vplay{width:64px;height:64px;margin:-32px 0 0 -32px}}
 </style>
 </head>
@@ -375,9 +379,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h1>The official WhatsApp API for your product.<br><span class="grad">₹200 a number. Zero commission.</span></h1>
       <p class="lead">Get an API key, plug it into your app, and send. No bloated platform, no card on Meta.</p>
       <div class="vwrap" id="vwrap">
-        <iframe id="yt" title="AI Hive WhatsApp API in 60 seconds" src="https://www.youtube-nocookie.com/embed/rmF2wGhdGFM?enablejsapi=1&amp;controls=0&amp;rel=0&amp;modestbranding=1&amp;playsinline=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=rmF2wGhdGFM" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe>
+        <iframe id="yt" title="AI Hive WhatsApp API in 60 seconds" src="https://www.youtube-nocookie.com/embed/rmF2wGhdGFM?enablejsapi=1&amp;controls=0&amp;rel=0&amp;modestbranding=1&amp;playsinline=1&amp;iv_load_policy=3&amp;disablekb=1&amp;fs=0&amp;autoplay=1&amp;mute=1&amp;loop=1&amp;playlist=rmF2wGhdGFM" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe>
         <button type="button" class="vshield" id="vshield" aria-label="Play or pause video"><span class="vplay"><svg viewBox="0 0 24 24"><path d="M6 4l15 8-15 8z"/></svg></span></button>
         <button type="button" class="vsound" id="vsound">🔇 Tap for sound</button>
+        <button type="button" class="vfs" id="vfs" aria-label="Fullscreen"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9V4h5v2H6v3H4zm10-5h6v6h-2V6h-4V4zM4 15h2v3h3v2H4v-5zm14 3v-3h2v5h-5v-2h3z"/></svg><span id="vfs-label">Fullscreen</span></button>
       </div>
       <div class="price-pop"><span class="old strike">₹400</span><span class="new">₹200</span><span class="per">/ number / month</span><span class="tag">50% OFF</span></div>
       <div class="hero-cta">
@@ -814,12 +819,18 @@ curl -X POST https://backend.theaihive.io/wa/v1/messages \
 <script>
 (function(){
   var f=document.getElementById('yt'),w=document.getElementById('vwrap');if(!f||!w)return;
-  var muted=true,playing=true;
+  try{var u=new URL(f.src);if(!u.searchParams.get('origin')){u.searchParams.set('origin',location.origin);f.src=u.toString()}}catch(e){}
+  var muted=true,playing=false,fsBtn=document.getElementById('vfs');
   function cmd(fn,args){try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:fn,args:args||[]}),'*')}catch(e){}}
-  function ui(){w.classList.toggle('playing',playing);w.classList.toggle('unmuted',!muted);document.getElementById('vsound').textContent=muted?'🔇 Tap for sound':'🔊 Sound on'}
+  function fsOn(){return document.fullscreenElement===w||document.webkitFullscreenElement===w}
+  function ui(){w.classList.toggle('playing',playing);w.classList.toggle('unmuted',!muted);document.getElementById('vsound').textContent=muted?'🔇 Tap for sound':'🔊 Sound on';var fsLabel=document.getElementById('vfs-label');if(fsLabel)fsLabel.textContent=fsOn()?'Exit':'Fullscreen'}
   function sound(){if(muted){muted=false;cmd('unMute');cmd('setVolume',[100]);cmd('seekTo',[0,true]);cmd('playVideo');playing=true}else{muted=true;cmd('mute')}ui()}
+  function fullscreen(){if(fsOn()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);return}var req=w.requestFullscreen||w.webkitRequestFullscreen;if(req)req.call(w)}
   document.getElementById('vshield').addEventListener('click',function(){if(muted){sound();return}playing=!playing;cmd(playing?'playVideo':'pauseVideo');ui()});
   document.getElementById('vsound').addEventListener('click',function(e){e.stopPropagation();sound()});
+  if(fsBtn)fsBtn.addEventListener('click',function(e){e.stopPropagation();fullscreen()});
+  document.addEventListener('fullscreenchange',ui);
+  document.addEventListener('webkitfullscreenchange',ui);
   window.addEventListener('message',function(e){if(typeof e.data!=='string'||e.data.indexOf('onStateChange')<0&&e.data.indexOf('infoDelivery')<0)return;try{var d=JSON.parse(e.data),st=d.info&&d.info.playerState!==undefined?d.info.playerState:(d.event==='onStateChange'?d.info:null);if(st===1){playing=true;ui()}else if(st===2||st===0){playing=false;ui()}}catch(x){}});
   f.addEventListener('load',function(){try{f.contentWindow.postMessage(JSON.stringify({event:'listening',id:'yt'}),'*')}catch(e){}});
   ui();
